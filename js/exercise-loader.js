@@ -10,10 +10,7 @@ class ExerciseLoader {
         // In a real implementation, this would dynamically scan the exercises folder
         // For now, we'll hardcode the structure
         const chapterFolders = [
-            '01-basics',
-            '02-words-and-lines',
-            '03-visual-mode',
-            '04-advanced'
+            '01-basics'
         ];
 
         for (const folder of chapterFolders) {
@@ -79,15 +76,11 @@ class ExerciseLoader {
         // Hardcoded mapping of folders to exercise files
         const mapping = {
             '01-basics': [
-                '01-first-steps.md',
-                '02-delete-character.md',
-                '03-undo.md'
-            ],
-            '02-words-and-lines': [
-                '01-word-jump.md'
-            ],
-            '03-visual-mode': [],
-            '04-advanced': []
+                '01-delete-character.md',
+                '02-delete-multiple.md',
+                '03-word-jump.md',
+                '04-delete-word.md'
+            ]
         };
 
         return mapping[folder] || [];

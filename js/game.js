@@ -70,9 +70,12 @@ class VimGame {
             this.onKeyPress(key);
         });
 
-        // Track content changes
-        this.editor.on('change', () => {
-            this.checkExerciseCompletion();
+        // Track content changes (but ignore programmatic changes)
+        this.editor.on('change', (cm, changeObj) => {
+            // Only check completion for user-initiated changes
+            if (changeObj.origin !== 'setValue') {
+                this.checkExerciseCompletion();
+            }
         });
 
         // Add mouse event handlers to prevent drag selection
@@ -91,24 +94,8 @@ class VimGame {
             return false;
         });
 
-        // Override some vim commands to track them
-        CodeMirror.Vim.defineAction('monitored-x', (cm, args, vim) => {
-            this.onKeyPress('x');
-            // Perform the actual delete
-            const pos = cm.getCursor();
-            const line = cm.getLine(pos.line);
-            if (pos.ch < line.length) {
-                cm.replaceRange('', pos, {line: pos.line, ch: pos.ch + 1});
-            }
-        });
-        CodeMirror.Vim.mapCommand('x', 'action', 'monitored-x', {}, {context: 'normal'});
-
-        // Track undo
-        CodeMirror.Vim.defineAction('monitored-u', (cm, args, vim) => {
-            this.onKeyPress('u');
-            cm.undo();
-        });
-        CodeMirror.Vim.mapCommand('u', 'action', 'monitored-u', {}, {context: 'normal'});
+        // Don't override vim commands - let them work naturally
+        // We'll track changes via the change event instead
     }
 
     setupEventListeners() {
@@ -120,15 +107,6 @@ class VimGame {
         // Next exercise button (in modal)
         document.getElementById('next-exercise-btn').addEventListener('click', () => {
             this.nextExercise();
-        });
-
-        // Chapter navigation
-        document.getElementById('prev-chapter').addEventListener('click', () => {
-            this.previousChapter();
-        });
-
-        document.getElementById('next-chapter').addEventListener('click', () => {
-            this.nextChapter();
         });
 
         // Track all keyboard events for visual feedback
@@ -143,6 +121,8 @@ class VimGame {
             console.error('No exercise available');
             return;
         }
+
+        console.log('Loading exercise:', this.currentExercise);
 
         // Reset state
         this.keyPressHistory = [];
@@ -175,26 +155,20 @@ class VimGame {
         const keyboardHints = document.querySelector('.keyboard-hints');
         
         if (hints && hints.length > 0) {
-            // Build dynamic hint text
-            let hintHTML = '<span class="hint-text">You can use the</span> ';
+            // Build dynamic hint text based on the exercise
+            let hintHTML = '<span class="hint-text">Hint: Use</span> ';
             hints.forEach((key, index) => {
                 if (index > 0) {
-                    hintHTML += ' <span class="hint-text">and</span> ';
+                    hintHTML += ' <span class="hint-text">or</span> ';
                 }
                 hintHTML += `<kbd>${key}</kbd>`;
             });
-            hintHTML += ' <span class="hint-text">keys to move the cursor.</span>';
             keyboardHints.innerHTML = hintHTML;
         }
         
-        // Update action instruction based on exercise
+        // Update action instruction - just use the exercise instructions directly
         const actionInstruction = document.getElementById('action-instruction');
-        if (this.currentExercise.instructions.includes('delete')) {
-            actionInstruction.innerHTML = 
-                `Move on top of the <kbd>%</kbd> character. Then press the <kbd>x</kbd> key to remove it.`;
-        } else {
-            actionInstruction.innerHTML = this.currentExercise.instructions;
-        }
+        actionInstruction.textContent = '';
 
         // Update progress
         this.updateProgressUI();
@@ -202,23 +176,12 @@ class VimGame {
 
     updateProgressUI() {
         const chapter = this.exerciseLoader.getCurrentChapter();
-        const progress = this.exerciseLoader.getProgress();
         
         // Update exercise counter
         document.getElementById('current-exercise').textContent = 
             this.exerciseLoader.currentExerciseIndex + 1;
         document.getElementById('total-exercises').textContent = 
             chapter ? chapter.exercises.length : 0;
-
-        // Update chapter name
-        document.getElementById('chapter-name').textContent = 
-            chapter ? `Chapter ${this.exerciseLoader.currentChapterIndex + 1}: ${chapter.title}` : '';
-
-        // Update navigation buttons
-        document.getElementById('prev-chapter').disabled = 
-            this.exerciseLoader.currentChapterIndex === 0;
-        document.getElementById('next-chapter').disabled = 
-            this.exerciseLoader.currentChapterIndex >= this.exerciseLoader.chapters.length - 1;
     }
 
     updateUI() {
