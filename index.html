@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vim Training Game</title>
+    
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header with instructions -->
+        <header class="game-header">
+            <h1 id="exercise-title">Loading...</h1>
+            <p id="instructions" class="instructions">Press ESC to enter command mode</p>
+            
+            <!-- Keyboard hints -->
+            <div class="keyboard-hints">
+                <span class="hint-text">You can use the</span>
+                <kbd id="key-hint-1">h</kbd>
+                <span class="hint-text">and</span>
+                <kbd id="key-hint-2">l</kbd>
+                <span class="hint-text">keys to move the cursor.</span>
+            </div>
+            
+            <div class="action-hint">
+                <span id="action-instruction">Move on top of the <kbd>%</kbd> character. Then press the <kbd>x</kbd> key to remove it.</span>
+            </div>
+            
+            <div class="undo-hint">
+                To undo press the <kbd>u</kbd> key.
+            </div>
+        </header>
+
+        <!-- Main editor area -->
+        <main class="editor-container">
+            <textarea id="vim-editor"></textarea>
+        </main>
+
+        <!-- Footer with progress and controls -->
+        <footer class="game-footer">
+            <div class="progress-container">
+                <button id="exercise-status" class="exercise-status">
+                    Exercise: <span id="current-exercise">0</span> / <span id="total-exercises">10</span>
+                </button>
+                <button id="reset-btn" class="reset-btn">Reset</button>
+            </div>
+            
+            <!-- Chapter navigation -->
+            <div class="chapter-nav">
+                <button id="prev-chapter" class="nav-btn">← Previous</button>
+                <span id="chapter-name">Chapter 1: The Basics</span>
+                <button id="next-chapter" class="nav-btn">Next →</button>
+            </div>
+        </footer>
+
+        <!-- Success Modal -->
+        <div id="success-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Well done! 🎉</h2>
+                <p>You completed the exercise!</p>
+                <button id="next-exercise-btn">Next Exercise</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/keymap/vim.min.js"></script>
+    
+    <!-- YAML Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    
+    <!-- Game Scripts -->
+    <script src="js/exercise-loader.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
