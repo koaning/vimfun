@@ -117,6 +117,7 @@ class ExerciseLoader {
             instructions: frontmatter.instructions || 'Complete the exercise',
             allowedKeys: frontmatter.allowed_keys || [],
             hintKeys: frontmatter.hint_keys || [],
+            optimalKeySequence: frontmatter.optimalKeySequence || null,
             startText: startMatch[1].trim(),
             endText: endMatch[1].trim()
         };

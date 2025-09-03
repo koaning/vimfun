@@ -33,6 +33,18 @@
             </div>
         </header>
 
+        <!-- Vim Motion Display -->
+        <div class="vim-motion-panel">
+            <div class="motion-display">
+                <span class="motion-label">Current motion:</span>
+                <span id="motion-buffer" class="motion-buffer"></span>
+            </div>
+            <div class="command-history">
+                <span class="history-label">Recent commands:</span>
+                <div id="history-list" class="history-list"></div>
+            </div>
+        </div>
+
         <!-- Main editor area -->
         <main class="editor-container">
             <textarea id="vim-editor"></textarea>
@@ -44,7 +56,10 @@
                 <button id="exercise-status" class="exercise-status">
                     Exercise: <span id="current-exercise">0</span> / <span id="total-exercises">4</span>
                 </button>
-                <button id="reset-btn" class="reset-btn">Reset</button>
+                <div class="control-buttons">
+                    <button id="check-btn" class="check-btn">Check <kbd>Ctrl+⏎</kbd></button>
+                    <button id="reset-btn" class="reset-btn">Reset</button>
+                </div>
             </div>
         </footer>
 
